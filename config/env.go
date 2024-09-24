@@ -22,12 +22,12 @@ func initConfig() Config {
 	godotenv.Load()
 
 	return Config{
-		PublicHost: getEnv("PUBLIC_HOST", "http://localhost"),
-		Port:       getEnv("PORT", "8080"),
+		PublicHost: getEnv("PUBLIC_HOST", "mysql://root:yZuxhlnVDFcDsQELWJBbFAFPPaXaspTw@autorack.proxy.rlwy.net:36112/railway."),
+		Port:       getEnv("PORT", "3306"),
 		DBUser:     getEnv("DB_USER", "root"),
-		DBPassword: getEnv("DB_PASSWORD", "mypassword"),
-		DBAddress:  fmt.Sprintf("%s:%s", getEnv("DB_HOST", "127.0.0.1"), getEnv("DB_PORT", "3306")),
-		DBName:     getEnv("DB_NAME", "ecom"),
+		DBPassword: getEnv("DB_PASSWORD", "yZuxhlnVDFcDsQELWJBbFAFPPaXaspTw"),
+		DBAddress:  fmt.Sprintf("%s:%s", getEnv("DB_HOST", "mysql.railway.internal"), getEnv("DB_PORT", "3306")),
+		DBName:     getEnv("DB_NAME", "railway"),
 	}
 }
 
