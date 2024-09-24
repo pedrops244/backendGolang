@@ -3,17 +3,20 @@ package config
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	PublicHost string
-	Port       string
-	DBUser     string
-	DBPassword string
-	DBAddress  string
-	DBName     string
+	PublicHost             string
+	Port                   string
+	DBUser                 string
+	DBPassword             string
+	DBAddress              string
+	DBName                 string
+	JWTExpirationInSeconds int64
+	JWTSecret              string
 }
 
 var Envs = initConfig()
@@ -22,12 +25,14 @@ func initConfig() Config {
 	godotenv.Load()
 
 	return Config{
-		PublicHost: getEnv("PUBLIC_HOST", "mysql://root:yZuxhlnVDFcDsQELWJBbFAFPPaXaspTw@autorack.proxy.rlwy.net:36112/railway."),
-		Port:       getEnv("PORT", "3306"),
-		DBUser:     getEnv("DB_USER", "root"),
-		DBPassword: getEnv("DB_PASSWORD", "yZuxhlnVDFcDsQELWJBbFAFPPaXaspTw"),
-		DBAddress:  fmt.Sprintf("%s:%s", getEnv("DB_HOST", "mysql.railway.internal"), getEnv("DB_PORT", "3306")),
-		DBName:     getEnv("DB_NAME", "railway"),
+		PublicHost:             getEnv("PUBLIC_HOST", "mysql://root:wqowcxQYYtDhfHtmNDhWpQrirWXJbMeT@mysql.railway.internal:3306/railway"),
+		Port:                   getEnv("PORT", "36112"),
+		DBUser:                 getEnv("DB_USER", "root"),
+		DBPassword:             getEnv("DB_PASSWORD", "yZuxhlnVDFcDsQELWJBbFAFPPaXaspTw"),
+		DBAddress:              fmt.Sprintf("%s:%s", getEnv("DB_HOST", "autorack.proxy.rlwy.net"), getEnv("DB_PORT", "36112")),
+		DBName:                 getEnv("DB_NAME", "railway"),
+		JWTExpirationInSeconds: getEnvAsInt("JWT_EXP", 3600*24*7),
+		JWTSecret:              getEnv("JWT_SECRET", "not-secret-secret-anymore?"),
 	}
 }
 
@@ -36,5 +41,16 @@ func getEnv(key, fallback string) string {
 		return value
 	}
 
+	return fallback
+}
+
+func getEnvAsInt(key string, fallback int64) int64 {
+	if value, ok := os.LookupEnv(key); ok {
+		i, err := strconv.ParseInt(value, 10, 64)
+		if err != nil {
+			return fallback
+		}
+		return i
+	}
 	return fallback
 }
