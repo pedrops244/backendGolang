@@ -20,11 +20,13 @@ func NewHandler(store types.UserStore) *Handler {
 	return &Handler{store: store}
 }
 
+// Register Routes
 func (h *Handler) RegisterRoutes(router *mux.Router) {
 	router.HandleFunc("/login", h.handleLogin).Methods("POST")
 	router.HandleFunc("/register", h.handleRegister).Methods("POST")
 }
 
+// Login the user
 func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 	// get JSON payload
 	var payload types.LoginUserPayload
@@ -49,6 +51,7 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("not found, invalid email or password"))
 		return
 	}
+
 	secret := []byte(config.Envs.JWTSecret)
 	token, err := auth.CreateJWT(secret, u.ID)
 	if err != nil {
@@ -58,6 +61,8 @@ func (h *Handler) handleLogin(w http.ResponseWriter, r *http.Request) {
 
 	utils.WriteJSON(w, http.StatusOK, map[string]string{"token": token})
 }
+
+// Register the user
 func (h *Handler) handleRegister(w http.ResponseWriter, r *http.Request) {
 
 	// get JSON payload

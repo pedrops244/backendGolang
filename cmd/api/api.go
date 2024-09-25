@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/sikozonpc/ecom/service/products"
 	"github.com/sikozonpc/ecom/service/user"
 )
 
@@ -28,6 +29,10 @@ func (s *APIServer) Run() error {
 	userStore := user.NewStore(s.db)
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes((subrouter))
+
+	productStore := products.NewStore(s.db)
+	productHandler := products.NewHandler(productStore)
+	productHandler.RegisterRoutes(subrouter)
 
 	log.Println("Listening on", s.addr)
 
