@@ -12,7 +12,7 @@ type Handler struct {
 	store types.ProductStore
 }
 
-func NewHandler(store types.ProductStore) *Handler {
+func NewHandler(store types.ProductStore, userStore types.UserStore) *Handler {
 	return &Handler{store: store}
 }
 
